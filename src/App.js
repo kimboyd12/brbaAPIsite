@@ -1,48 +1,56 @@
-import React, { Component } from "react"
-import logo from "./logo.svg"
-import "./App.css"
+import React from "react";
+import "./App.css";
+import axios from "axios";
+import { Route } from "react-router-dom";
+import CharacterList from "./components/CharacterList";
+import logo from "./components/breaking-bad-logo.png";
+import styled from "styled-components";
 
-class LambdaDemo extends Component {
-  constructor(props) {
-    super(props)
-    this.state = { loading: false, msg: null }
-  }
+const Container = styled.div`
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+`
 
-  handleClick = api => e => {
-    e.preventDefault()
+const Header = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    font-family: 'Raleway';
+`
 
-    this.setState({ loading: true })
-    fetch("/.netlify/functions/" + api)
-      .then(response => response.json())
-      .then(json => this.setState({ loading: false, msg: json.msg }))
-  }
+
+class App extends React.Component {
+    
+      state = {
+        characterData: []
+      }
+
+
+      componentDidMount() {
+        console.log("component did mount running")
+
+        axios
+          .get("https://www.breakingbadapi.com/api/characters?limit=27&offset=0")
+          .then(res => {
+            console.log(res);
+            this.setState({ characterData: res.data})
+          })
+          .catch(err => console.log(err));
+      }
 
   render() {
-    const { loading, msg } = this.state
-
     return (
-      <p>
-        <button onClick={this.handleClick("hello")}>{loading ? "Loading..." : "Call Lambda"}</button>
-        <button onClick={this.handleClick("async-dadjoke")}>{loading ? "Loading..." : "Call Async Lambda"}</button>
-        <br />
-        <span>{msg}</span>
-      </p>
-    )
-  }
-}
-
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <LambdaDemo />
-        </header>
-      </div>
+      <Container>
+        <Header>
+        <img width="200" src={logo} />
+        <h1>Characters</h1>
+        </Header>
+        <CharacterList characterData={this.state.characterData} />
+      </Container>
     )
   }
 }
