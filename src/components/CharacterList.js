@@ -6,13 +6,12 @@ const Cards = styled.div`
     display: flex;
     flex-wrap: wrap;
     margin: 0 auto;
-    border: 2px solid red;
-    justify-content: space-between;
+    justify-content: space-around;
 `
 
 const CharCard = styled.div`
-    border: 1px solid yellow;
-    padding: 20px;
+    border: 2px solid aqua;
+    padding: 30px;
     margin: 20px;
     text-align: center;
 `
